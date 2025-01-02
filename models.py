@@ -406,7 +406,6 @@ class PhonemePredictor(nn.Module):
     for i, block in enumerate(self.conformer_blocks):
        x = block(x)
     
-    # self.set_beam_decoder(beam_size=topk)
     topk_preds = self.beam_decoder(x, x_lengths)
 
     return topk_preds
@@ -419,8 +418,6 @@ class PhonemePredictor(nn.Module):
     
     topk_preds = self.decoder.next_topk(x, x_lengths, phn_labels)
     topk_preds = torch.topk(topk_preds, topk, dim=2)[1]
-    # print(topk_preds)
-    # print(topk_preds.size())
 
     return topk_preds
          

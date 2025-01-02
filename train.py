@@ -284,7 +284,7 @@ def train_and_evaluate(rank, epoch, hps, nets, optims, schedulers, scaler, loade
         loss_gen, losses_gen = generator_loss(y_d_hat_g)
         loss_gen_all = loss_gen + loss_fm + loss_mel  + loss_kl
 
-        loss_eeg_module = eeg_loss(x, eeg_decoder_out, x_lengths) #+ 0.1*ctc_loss
+        loss_eeg_module = eeg_loss(x, eeg_decoder_out, x_lengths)
         loss_eeg_phone = loss_eeg_module + hps.train.c_ctc * loss_ctc
 
     optim_g.zero_grad()
@@ -295,7 +295,6 @@ def train_and_evaluate(rank, epoch, hps, nets, optims, schedulers, scaler, loade
 
 
     optim_eeg.zero_grad()
-    # if "eeg" not in hps.train.freeze_modules:
     scaler.scale(loss_eeg_phone).backward()
     scaler.unscale_(optim_eeg)
     grad_norm_eeg_enc = commons.clip_grad_value_(eeg_module.parameters(), None)
